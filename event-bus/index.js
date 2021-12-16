@@ -8,7 +8,7 @@ app.use(bodyParser.json())
 const posts = {}
 
 app.post('/events', (req, res) => {
-  const event = res.body
+  const event = req.body
 
   axios.post('http://localhost:4001/events', event) // posts
   axios.post('http://localhost:4002/events', event) // comments
