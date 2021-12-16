@@ -1,17 +1,19 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import { randomBytes } from 'crypto'
+import cors from 'cors'
 
 const app = express()
+app.use(cors())
 app.use(bodyParser.json())
 
 const posts = {}
 
-app.get('/post', (req, res) => {
+app.get('/posts', (req, res) => {
   res.send(posts)
 })
 
-app.post('/post', (req, res) => {
+app.post('/posts', (req, res) => {
   const id = randomBytes(4).toString('hex')
   const { title } = req.body
 
@@ -20,6 +22,6 @@ app.post('/post', (req, res) => {
   res.status(201).send(posts[id])
 })
 
-app.listen(6000, () => {
-  console.log('Post Listening on 6000')
+app.listen(4001, () => {
+  console.log('Post Listening on 4001')
 })

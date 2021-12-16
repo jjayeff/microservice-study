@@ -1,14 +1,16 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import { randomBytes } from 'crypto'
+import cors from 'cors'
 
 const app = express()
 app.use(bodyParser.json())
+app.use(cors())
 
 const commentsByPostId = {}
 
 app.get('/posts/:id/comments', (req, res) => {
-  res.send(commentsByPostId[req.params.id] || []);
+  res.send(commentsByPostId[req.params.id] || [])
 })
 
 app.post('/posts/:id/comments', (req, res) => {
@@ -16,13 +18,13 @@ app.post('/posts/:id/comments', (req, res) => {
   const { content } = req.body
 
   const comments = commentsByPostId[req.params.id] || []
-  comments.push({id: commentId, content})
+  comments.push({ id: commentId, content })
 
   commentsByPostId[req.params.id] = comments
 
   res.status(201).send(comments)
 })
 
-app.listen(6001, () => {
-  console.log('Comment Listening on 6001')
+app.listen(4002, () => {
+  console.log('Comment Listening on 4002')
 })
