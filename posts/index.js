@@ -22,7 +22,7 @@ app.post('/posts', async (req, res) => {
 
   await axios.post('http://localhost:4005/events', {
     type: 'PostCreated',
-    data: { id, title }
+    data: { id, title, status: 'pending' }
   })
 
   res.status(201).send(posts[id])

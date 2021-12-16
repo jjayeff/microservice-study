@@ -13,24 +13,26 @@ app.get('/posts', (req, res) => {
 })
 
 app.post('/events', (req, res) => {
+  console.log('Event received', req.body.type)
   const { type, data } = req.body
-  switch (type) {
-    case 'PostCreated':
-      const { id, title } = data
-      posts[id] = { id, title, comments: [] }
-      break
-    case 'CommentCreated':
-      const { id: commentId, content, postId } = data
-      const post = posts[postId]
-      post.comments.push({ id: commentId, content })
-      break
-    default:
-      break
+  if (type === 'PostCreated') {
+    const { id, title, status: postStatus } = data
+    posts[id] = { id, title, comments: [], status: postStatus }
+  }
+  if (type === 'CommentCreated') {
+    const { id: commentId, content, postId, status: commentStatus } = data
+    const post = posts[postId]
+    post.comments.push({ id: commentId, content, status: commentStatus })
+  }
+  if (type === 'CommentUpdated') {
+    const { id, postId, status, content } = data
+    const comments = posts[postId].comments
+    const comment = comments.find(({ id: commentId }) => commentId === id)
+    comment.status = status
+    comment.content = content
   }
 
-  console.log('🚀 ~ file: index.js ~ line 10 ~ posts', posts)
-
-  res.send()
+  res.send({})
 })
 
 app.listen(4003, () => {
