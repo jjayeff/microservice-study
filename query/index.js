@@ -1,6 +1,7 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
+import axios from 'axios'
 
 const app = express()
 app.use(cors())
@@ -8,13 +9,7 @@ app.use(bodyParser.json())
 
 const posts = {}
 
-app.get('/posts', (req, res) => {
-  res.send(posts)
-})
-
-app.post('/events', (req, res) => {
-  console.log('Event received', req.body.type)
-  const { type, data } = req.body
+const handleEvent = ({ type, data }) => {
   if (type === 'PostCreated') {
     const { id, title, status: postStatus } = data
     posts[id] = { id, title, comments: [], status: postStatus }
@@ -31,10 +26,28 @@ app.post('/events', (req, res) => {
     comment.status = status
     comment.content = content
   }
+}
 
+app.get('/posts', (req, res) => {
+  res.send(posts)
+})
+
+app.post('/events', (req, res) => {
+  console.log('Event received', req.body.type)
+  handleEvent(req.body)
   res.send({})
 })
 
-app.listen(4003, () => {
+app.listen(4003, async () => {
   console.log('Query Listening on 4003')
+  try {
+    const res = await axios.get('http://localhost:4005/events')
+
+    for (let event of res.data) {
+      console.log('Processing event:', event.type)
+      handleEvent(event)
+    }
+  } catch (error) {
+    console.log(error.message)
+  }
 })
