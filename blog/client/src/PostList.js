@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import CommentCreate from './CommentCreate'
+import CommentList from './CommentList'
 
-const PostCreate = () => {
+const PostList = () => {
   const [posts, setPosts] = useState({})
 
   const fetchPosts = async () => {
@@ -23,6 +25,8 @@ const PostCreate = () => {
       >
         <div className="card-body">
           <h3>{title}</h3>
+          <CommentList postId={id} />
+          <CommentCreate postId={id} />
         </div>
       </div>
     )
@@ -35,4 +39,4 @@ const PostCreate = () => {
   )
 }
 
-export default PostCreate
+export default PostList
