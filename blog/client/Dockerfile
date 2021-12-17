@@ -1,11 +1,18 @@
-FROM node:alpine
+FROM node:14.17.3-buster
  
-# Add the following line 
-ENV CI=true
- 
+# set working directory
 WORKDIR /app
+
+# add `/app/node_modules/.bin` to $PATH
+ENV PATH /app/node_modules/.bin:$PATH
+
+# install app dependencies
 COPY package.json ./
+COPY package-lock.json ./
 RUN npm install
-COPY ./ ./
- 
-CMD ["npm", "start"]
+
+# add app
+COPY . ./
+
+# start app
+CMD ["npm", "start"]    
